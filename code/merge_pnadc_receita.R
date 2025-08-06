@@ -217,6 +217,9 @@ pnadReceita <- pnadReceita %>% mutate(centis_no_receita = weighted_ntile(rendime
 pnadReceita$renda_irpfepnad <- coalesce(pnadReceita$rendimento_todasfontes_calibrado, pnadReceita$rendimento_todasfontes)
 pnadReceita <- pnadReceita %>% mutate(centis_receita = weighted_ntile(renda_irpfepnad, peso_comcalib, 100))
 
+renda_media_sem_receita <- pnadReceita %>% group_by(centis_no_receita) %>% summarise("Renda Média Sem Correção" = sum(rendimento_todasfontes*peso_comcalib)/sum(peso_comcalib))
+renda_media_com_receita <- pnadReceita %>% group_by(centis_receita) %>% summarise("Renda Média Com Correção" = sum(renda_irpfepnad*peso_comcalib)/sum(peso_comcalib))
+
 renda_media_com_receita <- renda_media_com_receita %>% rename(centis = centis_receita)
 renda_media_sem_receita <- renda_media_sem_receita %>% rename(centis = centis_no_receita)
 
